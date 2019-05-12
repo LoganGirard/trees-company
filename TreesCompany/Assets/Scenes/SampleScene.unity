@@ -444,6 +444,7 @@ GameObject:
   m_Component:
   - component: {fileID: 943954465}
   - component: {fileID: 943954464}
+  - component: {fileID: 943954466}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -490,6 +491,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &943954466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943954463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29c2d12c6008ae140b138d968a865c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  treePrefab: {fileID: 1230724119892330263}
+  housePrefab: {fileID: 737882986}
+  floorPrefab: {fileID: 773164981}
 --- !u!1 &1538070035
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,3 +666,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93352a149b59d304eae276750a7b374b, type: 3}
+--- !u!1 &1230724119892330263 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6061244691346348346, guid: 93352a149b59d304eae276750a7b374b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1230724119892330262}
+  m_PrefabAsset: {fileID: 0}

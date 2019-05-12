@@ -36,9 +36,12 @@ public class BoardManager : MonoBehaviour
 
     public Count TreeCount = new Count(5, 9);   //Lower and upper limit for our random number of walls per level.
     public Count HouseCount = new Count(1, 5);   //Lower and upper limit for our random number of food items per level.
+    public float MaxTime = 5.0f;
+
 
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
     private List<Vector3> gridPositions = new List<Vector3>();   //A list of possible locations to place tiles.
+    private float Timer = 0.0f;
 
     private void Awake()
     {
@@ -158,20 +161,54 @@ public class BoardManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
+    void blah()
+    {
+        SetupScene();
+        gameObject.GetComponent<StateCalculator>().CalculateNextState(gridGameObjects);
+
+    }
+
+
+
+    // Update is called once per frame
     void Start()
     {
         SetupScene();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        var tmpGrid = new StateCalculator().CalculateNextState(gridGameObjects);
-        foreach (GameObject g in gridGameObjects)
-        {
-            Destroy(g);
-        }
+        Timer += Time.deltaTime;
 
-        gridGameObjects = tmpGrid;
+        if(Timer >= MaxTime)
+        {
+            Debug.Log("Timing, baby!");
+
+            var tmpGrid = gameObject.GetComponent<StateCalculator>().CalculateNextState(gridGameObjects);
+
+            for (int x = 0; x < gridGameObjects.GetLength(1); x++)
+            {
+                for (int y = 0; y < gridGameObjects.GetLength(1); y++)
+                {
+                    Destroy(gridGameObjects[y, x]);
+                }
+            }
+
+            gridGameObjects = tmpGrid;
+            for (int x = 0; x < gridGameObjects.GetLength(1); x++)
+            {
+                for (int y = 0; y < gridGameObjects.GetLength(1); y++)
+                {
+                    gridGameObjects[y, x].transform.SetParent(boardHolder);
+                    if (gridGameObjects[y,x].name.Contains("Tree"))
+                    {
+                        gridGameObjects[y, x].transform.Rotate(new Vector3(-90, 0));
+                    }
+                }
+            }
+            Timer = 0;
+
+            transform.Rotate(new Vector3(90, 0, 0));
+        }
     }
 }
