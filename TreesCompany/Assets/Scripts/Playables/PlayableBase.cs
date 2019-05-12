@@ -14,5 +14,9 @@ namespace Assets.Playables
         public virtual int TreeCost { get; } = 1;
 
         public virtual int PowerCost { get; } = 1;
+
+        public int X { get; set; }
+
+        public int Y { get; set; }  
     }
 }

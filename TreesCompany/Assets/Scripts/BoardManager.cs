@@ -36,9 +36,15 @@ public class BoardManager : MonoBehaviour
 
     public Count TreeCount = new Count(5, 9);   //Lower and upper limit for our random number of walls per level.
     public Count HouseCount = new Count(1, 5);   //Lower and upper limit for our random number of food items per level.
+    public float MaxTime = 1.0f;
+
+    public int TreePoints = 0;
+    public int EnergyPoints = 0;
+
 
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
     private List<Vector3> gridPositions = new List<Vector3>();   //A list of possible locations to place tiles.
+    private float Timer = 0.0f;
 
     private void Awake()
     {
@@ -159,14 +165,64 @@ public class BoardManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
+    void blah()
+    {
+        SetupScene();
+        gameObject.GetComponent<StateCalculator>().CalculateNextState(gridGameObjects);
+
+    }
+
+
+
+    // Update is called once per frame
     void Start()
     {
         SetupScene();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        Timer += Time.deltaTime;
+
+        if(Timer >= MaxTime)
+        {
+            TreePoints = 0;
+            EnergyPoints = 0;
+
+            Debug.Log("Timing, baby!");
+
+            var tmpGrid = gameObject.GetComponent<StateCalculator>().CalculateNextState(gridGameObjects);
+
+            for (int x = 0; x < gridGameObjects.GetLength(1); x++)
+            {
+                for (int y = 0; y < gridGameObjects.GetLength(0); y++)
+                {
+                    Destroy(gridGameObjects[y, x]);
+                }
+            }
+
+            gridGameObjects = tmpGrid;
+            for (int x = 0; x < gridGameObjects.GetLength(1); x++)
+            {
+                for (int y = 0; y < gridGameObjects.GetLength(0); y++)
+                {
+                    gridGameObjects[y, x].transform.SetParent(boardHolder);
+                    if (gridGameObjects[y,x].name.Contains("Tree"))
+                    {
+                        TreePoints++;
+                        gridGameObjects[y, x].transform.Rotate(new Vector3(-90, 0));
+                    }
+                    if (gridGameObjects[y, x].name.Contains("Power"))
+                    {
+                        EnergyPoints++;
+                    }
+                }
+            }
+            Timer = 0;
+
+            Debug.Log($"t:{TreePoints}, e: {EnergyPoints}");
+
+            transform.Rotate(new Vector3(90, 0, 0));
+        }
     }
 }
