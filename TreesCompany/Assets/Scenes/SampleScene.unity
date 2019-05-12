@@ -427,6 +427,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3c11920e79324848892e9d3caea0701, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  columns: 13
+  rows: 13
   PowerPlantTiles: []
   TreeTiles:
   - {fileID: 6061244691346348346, guid: 93352a149b59d304eae276750a7b374b, type: 3}
@@ -1090,7 +1092,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: b4731c7ef956a485aa6b0f6ed225bdb9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9a97358c7f7c77d4499377b7ce2a30bf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
