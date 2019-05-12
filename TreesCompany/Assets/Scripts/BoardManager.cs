@@ -39,7 +39,11 @@ public class BoardManager : MonoBehaviour
 
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
     private List<Vector3> gridPositions = new List<Vector3>();   //A list of possible locations to place tiles.
-    
+
+    private void Awake()
+    {
+        boardHolder = gameObject.transform;
+    }
 
     //Clears our list gridPositions and prepares it to generate a new board.
     void InitialiseList()
@@ -62,9 +66,6 @@ public class BoardManager : MonoBehaviour
     //Sets up the outer walls and floor(background) of the game board.
     void BoardSetup ()
     {
-        //Instantiate Board and set boardHolder to its transform.
-        boardHolder = new GameObject("Board").transform;
-
         //Loop along x axis. Start from 1 so you don't have anything at the edges.
         for (int x = 0; x < columns; x++)
         {
@@ -115,11 +116,25 @@ public class BoardManager : MonoBehaviour
             //Choose a position for randomPosition by getting a random position from our list of available Vector3s stored in gridPosition
             Vector3 randomPosition = RandomPosition();
 
+            // Get the previous object in that position
+            int x = (int)randomPosition.x;
+            int y = (int)randomPosition.y;
+            GameObject prevObject = gridGameObjects[x, y];
+
             //Choose a random tile from tileArray and assign it to tileChoice
             GameObject tileChoice = tileArray[Random.Range(0, tileArray.Length)];
 
             //Instantiate tileChoice at the position returned by RandomPosition with no change in rotation
-            Instantiate(tileChoice, randomPosition, Quaternion.identity);
+            GameObject instantiatedTile = Instantiate(tileChoice, prevObject.transform.position, Quaternion.identity);
+
+            // Destroy previous object
+            Destroy(prevObject);
+
+            //Update the data structure
+            gridGameObjects[x, y] = instantiatedTile;
+
+            //Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
+            instantiatedTile.transform.SetParent(boardHolder);
         }
     }
 
@@ -131,6 +146,9 @@ public class BoardManager : MonoBehaviour
 
         //Reset our list of gridpositions.
         InitialiseList();
+
+        // Rotate board
+        transform.Rotate(new Vector3(90, 0, 0));
 
         //Instantiate a random number of wall tiles based on minimum and maximum, at randomized positions.
         LayoutObjectAtRandom(TreeTiles, TreeCount.minimum, TreeCount.maximum);
