@@ -40,6 +40,7 @@ public class BoardManager : MonoBehaviour
 
     public int TreePoints = 0;
     public int EnergyPoints = 0;
+    public int MaxPopulation = 0;
 
 
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
@@ -207,12 +208,18 @@ public class BoardManager : MonoBehaviour
                 for (int y = 0; y < gridGameObjects.GetLength(0); y++)
                 {
                     gridGameObjects[y, x].transform.SetParent(boardHolder);
+
                     if (gridGameObjects[y,x].name.Contains("Tree"))
                     {
                         TreePoints++;
                         gridGameObjects[y, x].transform.Rotate(new Vector3(-90, 0));
                     }
-                    if (gridGameObjects[y, x].name.Contains("Power"))
+                    else if (gridGameObjects[y, x].name.Contains("House"))
+                    {
+                        MaxPopulation++;
+                        gridGameObjects[y, x].transform.Rotate(new Vector3(-90, 0));
+                    }
+                    else if (gridGameObjects[y, x].name.Contains("Power"))
                     {
                         EnergyPoints++;
                     }

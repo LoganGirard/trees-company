@@ -104,9 +104,9 @@ public class StateCalculator : MonoBehaviour
                 {
                     nextState[y, x] = Instantiate(floorPrefab, new Vector3(x, y, 0f), Quaternion.identity);
                 }
+
                 nextState[y, x].GetComponent<PlayableBase>().X = x;
                 nextState[y, x].GetComponent<PlayableBase>().Y = y;
-
             }
         }
 
