@@ -672,15 +672,17 @@ MonoBehaviour:
   HouseCount:
     minimum: 1
     maximum: 5
-  MaxTime: 1
+  LastTick: 0
+  FloatingTextPrefab: {fileID: 5687223246282639362, guid: 27944ec081df8d340af5fdac593c907a,
+    type: 3}
   TotalTreePoints: 0
   TotalEnergyPoints: 0
   TotalMaxPopulation: 0
   TreeValue: 1
   EnergyValue: 1
   HumanValue: 3
-  FloatingTextPrefab: {fileID: 5687223246282639362, guid: 27944ec081df8d340af5fdac593c907a,
-    type: 3}
+  Population: 0
+  TickTime: 1
 --- !u!4 &943954465
 Transform:
   m_ObjectHideFlags: 0
@@ -709,7 +711,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   treePrefab: {fileID: 6061244691346348346, guid: 93352a149b59d304eae276750a7b374b,
     type: 3}
-  housePrefab: {fileID: 5327191438930044939, guid: d6f96b7e6e6494946b26e05bb029964e,
+  housePrefab: {fileID: 2043982336550905386, guid: 5cd21978e495a474782a99cee78cd717,
     type: 3}
   floorPrefab: {fileID: 6546472538719013086, guid: 3c3d8e52e50661148a873686f3fe4456,
     type: 3}
@@ -731,7 +733,7 @@ MonoBehaviour:
     type: 3}
   powerPrefab: {fileID: 5901804350792739999, guid: bd7623ef38958e7478a6e83122ae5f92,
     type: 3}
-  housePrefab: {fileID: 1096612708666193880, guid: bf4af26e7a1652044af53d4ff16ce6d2,
+  housePrefab: {fileID: 2043982336550905386, guid: 5cd21978e495a474782a99cee78cd717,
     type: 3}
   TreeCardSprite: {fileID: 21300000, guid: f1955a75681a027409302c11d51804d9, type: 3}
   PowerCardSprite: {fileID: 21300000, guid: ea6fe01e5e8bde74d8bc8e87496aaabc, type: 3}
