@@ -42,7 +42,7 @@ public class BoardManager : MonoBehaviour
     public GameObject FloatingTextPrefab;
 
     // TotalPoints
-    public int TotalTreePoints = 0;
+    public int TotalTreePoints = 10;
     public int TotalEnergyPoints = 0;
     public int TotalMaxPopulation = 0;
 
@@ -53,7 +53,7 @@ public class BoardManager : MonoBehaviour
 
     public int Population = 0;
     public float TickTime = 1.0f;
-    
+
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
     private List<Vector3> gridPositions = new List<Vector3>();   //A list of possible locations to place tiles.
 
@@ -191,6 +191,10 @@ public class BoardManager : MonoBehaviour
 
     void Update()
     {
+        HandleMusicTransitions();
+
+        bool powerPlantOnBoard = false;
+
         if(Time.time - LastTick >= TickTime)
         {
             LastTick = Time.time;
@@ -234,8 +238,22 @@ public class BoardManager : MonoBehaviour
                     {
                         TotalEnergyPoints += EnergyValue;
                         ShowFloatingText(currentGO.transform, EnergyValue, "Energy");
+                        powerPlantOnBoard = true;
                     }
                 }
+            }
+
+            // Play factory ambience sound FX if a power plant is on the board
+            if(powerPlantOnBoard)
+            {
+                if(!SoundManager.instance.ambientFactorySource.isPlaying)
+                {
+                    SoundManager.instance.PlayFactoryLoop();
+                }
+            }
+            else
+            {
+                SoundManager.instance.InterruptFactoryLoop();
             }
 
             Canvas leCanvas = FindObjectOfType<Canvas>();
@@ -267,6 +285,22 @@ public class BoardManager : MonoBehaviour
             Debug.Log($"Tree Points:{TotalTreePoints}, Energy Points: {TotalEnergyPoints}");
 
             transform.Rotate(new Vector3(90, 0, 0));
+        }
+    }
+
+    void HandleMusicTransitions()
+    {
+        if(TotalTreePoints - 50 > TotalEnergyPoints)
+        {
+            SoundManager.instance.Transition(SoundManager.instance.hellMusicSource);
+        }
+        else if(TotalTreePoints < TotalEnergyPoints)
+        {
+            SoundManager.instance.Transition(SoundManager.instance.hellMusicSource);   
+        }
+        else
+        {
+            SoundManager.instance.Transition(SoundManager.instance.neutralMusicSource);
         }
     }
 

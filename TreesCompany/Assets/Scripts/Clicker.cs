@@ -14,6 +14,8 @@ public class Clicker : MonoBehaviour
     public Sprite PowerCardSprite;
     public Sprite HouseCardSprite;
 
+    public AudioClip[] PlaceStuffClips;
+
     public GameObject CurrentCardSelection;
 
     private GameObject CurrentPrefabSelection;
@@ -58,6 +60,8 @@ public class Clicker : MonoBehaviour
 
             BoardManager.gridGameObjects[yIndex, xIndex]
                 = Instantiate(prefab, hit.transform.position, Quaternion.identity);
+
+            SoundManager.instance.RandomizeSfx(PlaceStuffClips);
 
             // BoardManager.gridGameObjects[yIndex, xIndex].transform.SetParent(BoardManager.boardHolder);
         }

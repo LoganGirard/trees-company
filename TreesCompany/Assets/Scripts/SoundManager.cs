@@ -5,10 +5,21 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     public AudioSource efxSource;                   //Drag a reference to the audio source which will play the sound effects.
-    public AudioSource musicSource;                 //Drag a reference to the audio source which will play the music.
+
+    public AudioSource happyMusicSource;                 //Drag a reference to the audio source which will play the music.
+    public AudioSource hellMusicSource;
+    public AudioSource neutralMusicSource;
+
+
+    public AudioSource ambientBirdsSource;
+    public AudioSource ambientFactorySource;
+
     public static SoundManager instance = null;     //Allows other scripts to call functions from SoundManager.             
     public float lowPitchRange = .95f;              //The lowest a sound effect will be randomly pitched.
     public float highPitchRange = 1.05f;            //The highest a sound effect will be randomly pitched.
+    public static float FadeTime = 3.0f;
+
+    private AudioSource CurrentMusicSource;
 
 
     void Awake()
@@ -26,6 +37,26 @@ public class SoundManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public void Start()
+    {
+        CurrentMusicSource = neutralMusicSource;
+    }
+
+    public void PlayMusicSource(AudioSource audio)
+    {
+        if (CurrentMusicSource != null)
+        {
+            CurrentMusicSource.Stop();
+        }
+
+        CurrentMusicSource = audio;
+        CurrentMusicSource.Play();
+    }
+
+    public AudioSource GetCurrentMusicSource()
+    {
+        return CurrentMusicSource;
+    }
 
     //Used to play single sound clips.
     public void PlaySingle(AudioClip clip)
@@ -35,6 +66,17 @@ public class SoundManager : MonoBehaviour
 
         //Play the clip.
         efxSource.Play();
+    }
+
+    public void PlayFactoryLoop()
+    {
+        ambientFactorySource.loop = true;
+        ambientFactorySource.Play();
+    }
+
+    public void InterruptFactoryLoop()
+    {
+        ambientFactorySource.Stop();
     }
 
 
@@ -56,4 +98,52 @@ public class SoundManager : MonoBehaviour
         //Play the clip.
         efxSource.Play();
     }
+
+    public void Transition(AudioSource nextAudio)
+    {
+        if (nextAudio.isPlaying)
+            return;
+
+        StartCoroutine(FadeOut(CurrentMusicSource));
+
+        CurrentMusicSource = nextAudio;
+
+        StartCoroutine(FadeIn(nextAudio));
+    }
+
+    private IEnumerator FadeOut(AudioSource audioSource)
+    {
+        float startVolume = audioSource.volume;
+
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= startVolume * Time.deltaTime / FadeTime;
+
+            yield return null;
+        }
+
+        audioSource.Stop();
+        audioSource.volume = startVolume;
+    }
+
+    private IEnumerator FadeIn(AudioSource audioSource)
+    {
+        float finalVolume = 1;
+
+        if(!audioSource.isPlaying)
+        {
+            audioSource.volume = 0;
+            audioSource.Play();
+        }
+
+        while (audioSource.volume < 1)
+        {
+            audioSource.volume += finalVolume * Time.deltaTime / FadeTime;
+
+            yield return null;
+        }
+    }
+
+
+
 }
