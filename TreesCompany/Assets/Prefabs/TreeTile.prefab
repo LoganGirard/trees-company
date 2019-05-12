@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7218142097101961165}
   - component: {fileID: 7218142097101961166}
   - component: {fileID: 7218142097101961167}
-  - component: {fileID: 1787172784167501856}
+  - component: {fileID: 2255628024611612208}
   m_Layer: 0
   m_Name: TreeTile
   m_TagString: TileObjects
@@ -93,7 +93,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1787172784167501856
+--- !u!114 &2255628024611612208
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -102,6 +102,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7218142097101961160}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eb30c92982e69f4d8697efe170219dd, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a6f6f16b9ebc1747bb98aaf0206b651, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
