@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine random number generator.
+using UnityEngine.UI;
 
 public class BoardManager : MonoBehaviour
 {
@@ -36,24 +37,16 @@ public class BoardManager : MonoBehaviour
 
     public Count TreeCount = new Count(5, 9);   //Lower and upper limit for our random number of walls per level.
     public Count HouseCount = new Count(1, 5);   //Lower and upper limit for our random number of food items per level.
-    public float MaxTime = 1.0f;
+    public float LastTick;
 
-    // TotalPoints
-    public int TotalTreePoints = 0;
-    public int TotalEnergyPoints = 0;
-    public int TotalMaxPopulation = 0;
-
-    // Added Points
-    public int TreeValue = 1;
-    public int EnergyValue = 1;
-    public int HumanValue = 3;
-
-    public GameObject FloatingTextPrefab;
-
-
+    public int TreePoints = 0;
+    public int EnergyPoints = 0;
+    public int MaxPopulation = 0;
+    public int Population = 0;
+    public float TickTime = 1.0f;
+    
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
     private List<Vector3> gridPositions = new List<Vector3>();   //A list of possible locations to place tiles.
-    private float Timer = 0.0f;
 
     private void Awake()
     {
@@ -178,27 +171,23 @@ public class BoardManager : MonoBehaviour
     {
         SetupScene();
         gameObject.GetComponent<StateCalculator>().CalculateNextState(gridGameObjects);
-
     }
-
-
 
     // Update is called once per frame
     void Start()
     {
         SetupScene();
+        LastTick = Time.time;
     }
 
     void Update()
     {
-        Timer += Time.deltaTime;
-
-        if(Timer >= MaxTime)
+        if(Time.time - LastTick >= TickTime)
         {
-            TotalTreePoints = 0;
-            TotalEnergyPoints = 0;
+            LastTick = Time.time;
+            MaxPopulation = 0;
 
-            // Debug.Log("Timing, baby!");
+            Debug.Log("Timing, baby!");
 
             var tmpGrid = gameObject.GetComponent<StateCalculator>().CalculateNextState(gridGameObjects);
 
@@ -211,67 +200,60 @@ public class BoardManager : MonoBehaviour
             }
 
             gridGameObjects = tmpGrid;
+
             for (int x = 0; x < gridGameObjects.GetLength(1); x++)
             {
                 for (int y = 0; y < gridGameObjects.GetLength(0); y++)
                 {
-                    GameObject currentGO = gridGameObjects[y, x];
-                    currentGO.transform.SetParent(boardHolder);
+                    gridGameObjects[y, x].transform.SetParent(boardHolder);
 
-                    if (currentGO.name.Contains("Tree"))
+                    if (gridGameObjects[y,x].name.Contains("Tree"))
                     {
-
-                        TotalTreePoints += TreeValue;
-                        currentGO.transform.Rotate(new Vector3(-90, 0));
-                        ShowFloatingText(currentGO.transform, TreeValue, "Tree");
-                    }
-                    else if (currentGO.name.Contains("House"))
-                    {
-                        // TODO: Modify this when you build a house
-                        // TotalMaxPopulation++;
+                        TreePoints++;
                         gridGameObjects[y, x].transform.Rotate(new Vector3(-90, 0));
-                        //ShowFloatingText(currentGO.transform, HumanValue, "Human");
                     }
-                    else if (currentGO.name.Contains("Power"))
+                    else if (gridGameObjects[y, x].name.Contains("House"))
                     {
-                        TotalEnergyPoints += EnergyValue;
-                        ShowFloatingText(currentGO.transform, EnergyValue, "Energy");
+                        MaxPopulation++;
+                        Population++;
+                        gridGameObjects[y, x].transform.Rotate(new Vector3(90, -90, 90));
+                    }
+                    else if (gridGameObjects[y, x].name.Contains("Power"))
+                    {
+                        EnergyPoints++;
                     }
                 }
             }
-            Timer = 0;
 
-            Debug.Log($"Tree Points:{TotalTreePoints}, Energy Points: {TotalEnergyPoints}");
+            Canvas leCanvas = FindObjectOfType<Canvas>();
+
+            foreach (Transform canvasChild in leCanvas.transform)
+            {
+                if (canvasChild.childCount > 0)
+                {
+                    Text leText = canvasChild.GetChild(0).GetComponent<Text>();
+
+                    switch (canvasChild.name)
+                    {
+                        case "HumanIcon":
+                            leText.text = $"{Population}/{MaxPopulation}";
+                            break;
+                        case "PowerIcon":
+                            leText.text = $"{EnergyPoints}";
+                            break;
+                        case "TreeIcon":
+                            leText.text = $"{TreePoints}";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+
+            Debug.Log($"t:{TreePoints}, e: {EnergyPoints}");
 
             transform.Rotate(new Vector3(90, 0, 0));
-        }
-    }
-
-    void ShowFloatingText(Transform emittingObject, int value, string type)
-    {
-        if(FloatingTextPrefab != null)
-        {
-            GameObject go = Instantiate(FloatingTextPrefab, emittingObject.position, Quaternion.identity, emittingObject);
-            go.transform.Rotate(new Vector3(-90, 0, 0));
-
-            TextMesh textMesh = go.GetComponent<TextMesh>();
-            textMesh.text = "+" + value.ToString();
-
-            // '7C942C' - green (124, 148, 44)
-            // 'FFCA6F' - electric (255, 202, 111)
-            // Definitely would pass a Code Review
-            if(type.Equals("Tree"))
-            {
-                textMesh.color = Color.green; // new Color(124/255.0f, 148/255.0f, 44/255.0f);
-            }
-            else if(type.Equals("Energy"))
-            {
-                textMesh.color = Color.yellow; // new Color(1, 202/255.0f, 111/255.0f);
-            }
-            else
-            {
-                textMesh.color = Color.black;
-            }
         }
     }
 }
