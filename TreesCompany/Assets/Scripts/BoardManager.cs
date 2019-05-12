@@ -186,7 +186,7 @@ public class BoardManager : MonoBehaviour
     void Start()
     {
         SetupScene();
-        LastTick = Time.time;
+        LastTick = Time.time - TickTime * 2;
     }
 
     void Update()
@@ -233,6 +233,7 @@ public class BoardManager : MonoBehaviour
                     else if (currentGO.name.Contains("Power"))
                     {
                         TotalEnergyPoints += EnergyValue;
+                        currentGO.transform.Rotate(new Vector3(-90, 0, 0));
                         ShowFloatingText(currentGO.transform, EnergyValue, "Energy");
                     }
                 }

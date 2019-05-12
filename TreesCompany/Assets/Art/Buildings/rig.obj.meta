@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f0a2c4a75a9694318a67ffcf50ba6d58
+guid: 9fc885efe1fbe426b80e83c33114b022
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -7,28 +7,11 @@ ModelImporter:
     100002: //RootNode
     400000: default
     400002: //RootNode
-    2100000: None
-    2100002: None_home_innerbox.png
-    2100004: defaultMat
+    2100000: Material
     2300000: default
     3300000: default
     4300000: default
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: None
-    second: {fileID: 2100000, guid: 6d25c931a2d2a46199a75cc29e1281d2, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: None_home_innerbox.png
-    second: {fileID: 2100000, guid: 0dcd2443bd05f4075a9a4f8108a8f984, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: defaultMat
-    second: {fileID: 2100000, guid: 67cc86d1e390a4b71aaa92c2908e3201, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
