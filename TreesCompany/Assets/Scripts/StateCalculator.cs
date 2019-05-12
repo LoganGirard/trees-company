@@ -1,13 +1,13 @@
 ﻿using Assets.Playables;
 using System;
 using UnityEngine;
-using Tree = Assets.Playables.Tree;
 
 public class StateCalculator : MonoBehaviour
 {
     public GameObject treePrefab;
     public GameObject housePrefab;
     public  GameObject floorPrefab;
+    public GameObject powerPrefab;
 
      void GetNeighbors(GameObject[,] grid, int x, int y, out int treeCount, out int houseCount, out int powerHouseCount)
     {
@@ -97,8 +97,17 @@ public class StateCalculator : MonoBehaviour
                         nextState[y, x] = Instantiate(housePrefab, new Vector3(x, y, 0f), Quaternion.identity);
                     }  
                 }
+                else if(IsPower(cur))
+                {
+                    nextState[y, x] = Instantiate(powerPrefab, new Vector3(x, y, 0f), Quaternion.identity);
+                }
+                else
+                {
+                    nextState[y, x] = Instantiate(floorPrefab, new Vector3(x, y, 0f), Quaternion.identity);
+                }
+                nextState[y, x].GetComponent<PlayableBase>().X = x;
+                nextState[y, x].GetComponent<PlayableBase>().Y = y;
 
-                Debug.Log($"choice: {nextState[y,x].name}");
             }
         }
 
@@ -112,16 +121,16 @@ public class StateCalculator : MonoBehaviour
 
      bool IsTree(GameObject g)
     {
-        return g.GetComponent<Assets.Playables.Tree>() != null;
+        return g.name.Contains("Tree");
     }
 
      bool IsPower(GameObject g)
     {
-        return g.GetComponent<PowerHouse>() != null;
+        return g.name.Contains("Power");
     }
 
      bool IsHouse(GameObject g)
     {
-        return g.GetComponent<House>() != null;
+        return g.name.Contains("House") && !g.name.Contains("Power");
     }
 }

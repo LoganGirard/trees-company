@@ -36,7 +36,10 @@ public class BoardManager : MonoBehaviour
 
     public Count TreeCount = new Count(5, 9);   //Lower and upper limit for our random number of walls per level.
     public Count HouseCount = new Count(1, 5);   //Lower and upper limit for our random number of food items per level.
-    public float MaxTime = 5.0f;
+    public float MaxTime = 1.0f;
+
+    public int TreePoints = 0;
+    public int EnergyPoints = 0;
 
 
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
@@ -182,6 +185,9 @@ public class BoardManager : MonoBehaviour
 
         if(Timer >= MaxTime)
         {
+            TreePoints = 0;
+            EnergyPoints = 0;
+
             Debug.Log("Timing, baby!");
 
             var tmpGrid = gameObject.GetComponent<StateCalculator>().CalculateNextState(gridGameObjects);
@@ -202,11 +208,18 @@ public class BoardManager : MonoBehaviour
                     gridGameObjects[y, x].transform.SetParent(boardHolder);
                     if (gridGameObjects[y,x].name.Contains("Tree"))
                     {
+                        TreePoints++;
                         gridGameObjects[y, x].transform.Rotate(new Vector3(-90, 0));
+                    }
+                    if (gridGameObjects[y, x].name.Contains("Power"))
+                    {
+                        EnergyPoints++;
                     }
                 }
             }
             Timer = 0;
+
+            Debug.Log($"t:{TreePoints}, e: {EnergyPoints}");
 
             transform.Rotate(new Vector3(90, 0, 0));
         }
