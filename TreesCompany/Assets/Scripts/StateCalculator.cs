@@ -54,7 +54,7 @@ public class StateCalculator : MonoBehaviour
 
                 GetNeighbors(originalGrid, x, y, out int treeCount, out int houseCount, out int powerHousecount);
 
-                Debug.Log($"cur.name counts: t: {treeCount}, h {houseCount}, ph {powerHousecount}");
+                //Debug.Log($"cur.name counts: t: {treeCount}, h {houseCount}, ph {powerHousecount}");
 
                 if (IsEmpty(cur))
                 {

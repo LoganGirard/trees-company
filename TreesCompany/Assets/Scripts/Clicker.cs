@@ -2,16 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Playables;
+using UnityEngine.UI;
 
 public class Clicker : MonoBehaviour
 {
+    public GameObject treePrefab;
     public GameObject powerPrefab;
+    public GameObject housePrefab;
+
+    public Sprite TreeCardSprite;
+    public Sprite PowerCardSprite;
+    public Sprite HouseCardSprite;
+
+    public GameObject CurrentCardSelection;
+
+    private GameObject CurrentPrefabSelection;
+    
 
     Camera Camera;
     // Start is called before the first frame update
     void Start()
     {
         Camera = FindObjectOfType<Camera>();
+
+        CurrentPrefabSelection = treePrefab;
     }
 
     // Update is called once per frame
@@ -19,24 +33,64 @@ public class Clicker : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                Debug.Log(hit.transform.gameObject.name);
-                // the object identified by hit.transform was clicked
-                // do whatever you want
+            PlaceGameObject(CurrentPrefabSelection);
+        }
 
-                int x = hit.transform.gameObject.GetComponent<PlayableBase>().X;
-                int y = hit.transform.gameObject.GetComponent<PlayableBase>().Y;
+        SwitchCurrentPrefabSelection();
+    }
 
-                Destroy(BoardManager.gridGameObjects[y, x]);
+    void PlaceGameObject(GameObject prefab)
+    {
+        Ray ray = Camera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
 
-                BoardManager.gridGameObjects[y, x] 
-                    = Instantiate(powerPrefab, new Vector3(x, y, 0f), Quaternion.identity);
+        // Only let the user add stuff on floor tiles
+        if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.name.Contains("Floor"))
+        {
+            Debug.Log(hit.transform.gameObject.name);
+            // the object identified by hit.transform was clicked
+            // do whatever you want
 
-                //BoardManager.gridGameObjects[y, x].transform.SetParent(BoardManager.boardHolder);
-            }
+            int xIndex = hit.transform.gameObject.GetComponent<PlayableBase>().X;
+            int yIndex = hit.transform.gameObject.GetComponent<PlayableBase>().Y;
+
+            Destroy(BoardManager.gridGameObjects[yIndex, xIndex]);
+
+            BoardManager.gridGameObjects[yIndex, xIndex]
+                = Instantiate(prefab, hit.transform.position, Quaternion.identity);
+
+            // BoardManager.gridGameObjects[yIndex, xIndex].transform.SetParent(BoardManager.boardHolder);
+        }
+        else
+        {
+            Debug.Log("Can't click non-floor tiles!");
         }
     }
+
+    // Switch current prefab and reflect changes in UI
+    void SwitchCurrentPrefabSelection()
+    {
+        if(Input.GetKey(KeyCode.A))
+        {
+            CurrentPrefabSelection = treePrefab;
+
+            CurrentCardSelection.GetComponent<Image>().sprite = TreeCardSprite;
+
+        }
+
+        else if (Input.GetKey(KeyCode.S))
+        {
+            CurrentPrefabSelection = housePrefab;
+
+            CurrentCardSelection.GetComponent<Image>().sprite = HouseCardSprite;
+        }
+
+        else if (Input.GetKey(KeyCode.D))
+        {
+            CurrentPrefabSelection = powerPrefab;
+
+            CurrentCardSelection.GetComponent<Image>().sprite = PowerCardSprite;
+        }
+    }
+    
 }
