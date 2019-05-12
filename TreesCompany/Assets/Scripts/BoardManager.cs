@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine random number generator.
+using UnityEngine.UI;
 
 public class BoardManager : MonoBehaviour
 {
@@ -36,16 +37,16 @@ public class BoardManager : MonoBehaviour
 
     public Count TreeCount = new Count(5, 9);   //Lower and upper limit for our random number of walls per level.
     public Count HouseCount = new Count(1, 5);   //Lower and upper limit for our random number of food items per level.
-    public float MaxTime = 1.0f;
+    public float LastTick;
 
     public int TreePoints = 0;
     public int EnergyPoints = 0;
     public int MaxPopulation = 0;
-
-
+    public int Population = 0;
+    public float TickTime = 1.0f;
+    
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
     private List<Vector3> gridPositions = new List<Vector3>();   //A list of possible locations to place tiles.
-    private float Timer = 0.0f;
 
     private void Awake()
     {
@@ -170,25 +171,21 @@ public class BoardManager : MonoBehaviour
     {
         SetupScene();
         gameObject.GetComponent<StateCalculator>().CalculateNextState(gridGameObjects);
-
     }
-
-
 
     // Update is called once per frame
     void Start()
     {
         SetupScene();
+        LastTick = Time.time;
     }
 
     void Update()
     {
-        Timer += Time.deltaTime;
-
-        if(Timer >= MaxTime)
+        if(Time.time - LastTick >= TickTime)
         {
-            TreePoints = 0;
-            EnergyPoints = 0;
+            LastTick = Time.time;
+            MaxPopulation = 0;
 
             Debug.Log("Timing, baby!");
 
@@ -203,6 +200,7 @@ public class BoardManager : MonoBehaviour
             }
 
             gridGameObjects = tmpGrid;
+
             for (int x = 0; x < gridGameObjects.GetLength(1); x++)
             {
                 for (int y = 0; y < gridGameObjects.GetLength(0); y++)
@@ -217,7 +215,8 @@ public class BoardManager : MonoBehaviour
                     else if (gridGameObjects[y, x].name.Contains("House"))
                     {
                         MaxPopulation++;
-                        gridGameObjects[y, x].transform.Rotate(new Vector3(-90, 0));
+                        Population++;
+                        gridGameObjects[y, x].transform.Rotate(new Vector3(90, -90, 90));
                     }
                     else if (gridGameObjects[y, x].name.Contains("Power"))
                     {
@@ -225,7 +224,32 @@ public class BoardManager : MonoBehaviour
                     }
                 }
             }
-            Timer = 0;
+
+            Canvas leCanvas = FindObjectOfType<Canvas>();
+
+            foreach (Transform canvasChild in leCanvas.transform)
+            {
+                if (canvasChild.childCount > 0)
+                {
+                    Text leText = canvasChild.GetChild(0).GetComponent<Text>();
+
+                    switch (canvasChild.name)
+                    {
+                        case "HumanIcon":
+                            leText.text = $"{Population}/{MaxPopulation}";
+                            break;
+                        case "PowerIcon":
+                            leText.text = $"{EnergyPoints}";
+                            break;
+                        case "TreeIcon":
+                            leText.text = $"{TreePoints}";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
 
             Debug.Log($"t:{TreePoints}, e: {EnergyPoints}");
 
