@@ -21,6 +21,10 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    public int TreePoints = 0;
+    public int EnergyPoints = 0;
+    public int MaxPopulation = 0;
+
     // TODO: Create quad prefabs for game pieces
     // TODO: Rotate whole board 90
 
@@ -37,11 +41,6 @@ public class BoardManager : MonoBehaviour
     public Count TreeCount = new Count(5, 9);   //Lower and upper limit for our random number of walls per level.
     public Count HouseCount = new Count(1, 5);   //Lower and upper limit for our random number of food items per level.
     public float MaxTime = 1.0f;
-
-    public int TreePoints = 0;
-    public int EnergyPoints = 0;
-    public int MaxPopulation = 0;
-
 
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
     private List<Vector3> gridPositions = new List<Vector3>();   //A list of possible locations to place tiles.
@@ -170,10 +169,7 @@ public class BoardManager : MonoBehaviour
     {
         SetupScene();
         gameObject.GetComponent<StateCalculator>().CalculateNextState(gridGameObjects);
-
     }
-
-
 
     // Update is called once per frame
     void Start()
@@ -189,6 +185,7 @@ public class BoardManager : MonoBehaviour
         {
             TreePoints = 0;
             EnergyPoints = 0;
+            MaxPopulation = 0;
 
             Debug.Log("Timing, baby!");
 
