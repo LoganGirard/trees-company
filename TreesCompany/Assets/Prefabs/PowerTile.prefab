@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 883379230762737273}
   - component: {fileID: 2721967788912159872}
   - component: {fileID: 6040160580059290590}
-  - component: {fileID: 1962374328412781521}
+  - component: {fileID: 5494454178118871269}
   m_Layer: 0
   m_Name: PowerTile
   m_TagString: Untagged
@@ -92,7 +92,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1962374328412781521
+--- !u!114 &5494454178118871269
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

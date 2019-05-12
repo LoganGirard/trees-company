@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3339011634313877696}
   - component: {fileID: 3339011634313877699}
   - component: {fileID: 3339011634313877698}
-  - component: {fileID: 4607311559441561288}
+  - component: {fileID: 4938435557373262798}
   m_Layer: 0
   m_Name: FloorTile3
   m_TagString: TileObjects
@@ -93,7 +93,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &4607311559441561288
+--- !u!114 &4938435557373262798
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

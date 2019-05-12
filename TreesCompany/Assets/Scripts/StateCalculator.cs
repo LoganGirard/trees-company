@@ -52,7 +52,6 @@ public class StateCalculator : MonoBehaviour
             {
                 var cur = originalGrid[y, x];
 
-                //nextState[y, x] = Instantiate(cur, new Vector3(x, y, 0f), Quaternion.identity);
                 GetNeighbors(originalGrid, x, y, out int treeCount, out int houseCount, out int powerHousecount);
 
                 Debug.Log($"cur.name counts: t: {treeCount}, h {houseCount}, ph {powerHousecount}");
