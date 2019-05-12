@@ -195,7 +195,7 @@ public class BoardManager : MonoBehaviour
 
             for (int x = 0; x < gridGameObjects.GetLength(1); x++)
             {
-                for (int y = 0; y < gridGameObjects.GetLength(1); y++)
+                for (int y = 0; y < gridGameObjects.GetLength(0); y++)
                 {
                     Destroy(gridGameObjects[y, x]);
                 }
@@ -204,7 +204,7 @@ public class BoardManager : MonoBehaviour
             gridGameObjects = tmpGrid;
             for (int x = 0; x < gridGameObjects.GetLength(1); x++)
             {
-                for (int y = 0; y < gridGameObjects.GetLength(1); y++)
+                for (int y = 0; y < gridGameObjects.GetLength(0); y++)
                 {
                     gridGameObjects[y, x].transform.SetParent(boardHolder);
                     if (gridGameObjects[y,x].name.Contains("Tree"))
