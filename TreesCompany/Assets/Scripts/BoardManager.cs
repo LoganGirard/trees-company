@@ -148,6 +148,12 @@ public class BoardManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        var tmpGrid = new StateCalculator().CalculateNextState(gridGameObjects);
+        foreach (GameObject g in gridGameObjects)
+        {
+            Destroy(g);
+        }
+
+        gridGameObjects = tmpGrid;
     }
 }
