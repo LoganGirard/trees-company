@@ -24,10 +24,10 @@ public class BoardManager : MonoBehaviour
     // TODO: Create quad prefabs for game pieces
     // TODO: Rotate whole board 90
 
-    public static int columns = 13;
-    public static int rows = 13;
-    
-    public static GameObject[,] gridGameObjects = new GameObject[rows, columns];    // Game Objects in the grid
+    public int columns = 13;
+    public int rows = 13;
+
+    public static GameObject[,] gridGameObjects;    // Game Objects in the grid
 
     public GameObject[] PowerPlantTiles;        // Array of power plant prefabs
     public GameObject[] TreeTiles;              // Array of tree prefabs
@@ -49,6 +49,7 @@ public class BoardManager : MonoBehaviour
     private void Awake()
     {
         boardHolder = gameObject.transform;
+        gridGameObjects = new GameObject[rows, columns];
     }
 
     //Clears our list gridPositions and prepares it to generate a new board.
