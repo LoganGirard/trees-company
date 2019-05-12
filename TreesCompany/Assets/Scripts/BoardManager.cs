@@ -38,9 +38,17 @@ public class BoardManager : MonoBehaviour
     public Count HouseCount = new Count(1, 5);   //Lower and upper limit for our random number of food items per level.
     public float MaxTime = 1.0f;
 
-    public int TreePoints = 0;
-    public int EnergyPoints = 0;
-    public int MaxPopulation = 0;
+    // TotalPoints
+    public int TotalTreePoints = 0;
+    public int TotalEnergyPoints = 0;
+    public int TotalMaxPopulation = 0;
+
+    // Added Points
+    public int TreeValue = 1;
+    public int EnergyValue = 1;
+    public int HumanValue = 3;
+
+    public GameObject FloatingTextPrefab;
 
 
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
@@ -187,10 +195,10 @@ public class BoardManager : MonoBehaviour
 
         if(Timer >= MaxTime)
         {
-            TreePoints = 0;
-            EnergyPoints = 0;
+            TotalTreePoints = 0;
+            TotalEnergyPoints = 0;
 
-            Debug.Log("Timing, baby!");
+            // Debug.Log("Timing, baby!");
 
             var tmpGrid = gameObject.GetComponent<StateCalculator>().CalculateNextState(gridGameObjects);
 
@@ -207,29 +215,63 @@ public class BoardManager : MonoBehaviour
             {
                 for (int y = 0; y < gridGameObjects.GetLength(0); y++)
                 {
-                    gridGameObjects[y, x].transform.SetParent(boardHolder);
+                    GameObject currentGO = gridGameObjects[y, x];
+                    currentGO.transform.SetParent(boardHolder);
 
-                    if (gridGameObjects[y,x].name.Contains("Tree"))
+                    if (currentGO.name.Contains("Tree"))
                     {
-                        TreePoints++;
-                        gridGameObjects[y, x].transform.Rotate(new Vector3(-90, 0));
+
+                        TotalTreePoints += TreeValue;
+                        currentGO.transform.Rotate(new Vector3(-90, 0));
+                        ShowFloatingText(currentGO.transform, TreeValue, "Tree");
                     }
-                    else if (gridGameObjects[y, x].name.Contains("House"))
+                    else if (currentGO.name.Contains("House"))
                     {
-                        MaxPopulation++;
+                        // TODO: Modify this when you build a house
+                        // TotalMaxPopulation++;
                         gridGameObjects[y, x].transform.Rotate(new Vector3(-90, 0));
+                        //ShowFloatingText(currentGO.transform, HumanValue, "Human");
                     }
-                    else if (gridGameObjects[y, x].name.Contains("Power"))
+                    else if (currentGO.name.Contains("Power"))
                     {
-                        EnergyPoints++;
+                        TotalEnergyPoints += EnergyValue;
+                        ShowFloatingText(currentGO.transform, EnergyValue, "Energy");
                     }
                 }
             }
             Timer = 0;
 
-            Debug.Log($"t:{TreePoints}, e: {EnergyPoints}");
+            Debug.Log($"Tree Points:{TotalTreePoints}, Energy Points: {TotalEnergyPoints}");
 
             transform.Rotate(new Vector3(90, 0, 0));
+        }
+    }
+
+    void ShowFloatingText(Transform emittingObject, int value, string type)
+    {
+        if(FloatingTextPrefab != null)
+        {
+            GameObject go = Instantiate(FloatingTextPrefab, emittingObject.position, Quaternion.identity, emittingObject);
+            go.transform.Rotate(new Vector3(-90, 0, 0));
+
+            TextMesh textMesh = go.GetComponent<TextMesh>();
+            textMesh.text = "+" + value.ToString();
+
+            // '7C942C' - green (124, 148, 44)
+            // 'FFCA6F' - electric (255, 202, 111)
+            // Definitely would pass a Code Review
+            if(type.Equals("Tree"))
+            {
+                textMesh.color = Color.green; // new Color(124/255.0f, 148/255.0f, 44/255.0f);
+            }
+            else if(type.Equals("Energy"))
+            {
+                textMesh.color = Color.yellow; // new Color(1, 202/255.0f, 111/255.0f);
+            }
+            else
+            {
+                textMesh.color = Color.black;
+            }
         }
     }
 }
