@@ -52,7 +52,7 @@ public class BoardManager : MonoBehaviour
     public int HumanValue = 3;
 
     public int Population = 0;
-    public float TickTime = 1.0f;
+    public float TickTime = 5.0f;
     
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
     private List<Vector3> gridPositions = new List<Vector3>();   //A list of possible locations to place tiles.

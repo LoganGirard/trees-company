@@ -121,7 +121,7 @@ public class CameraController : MonoBehaviour
     void ZoomCamera()
     {
         var newFieldOfView = ProportionalFieldOfView - Input.mouseScrollDelta.y * ZoomScale;
-        if (newFieldOfView > 0.5 && newFieldOfView < 1.5)
+        if (newFieldOfView > 0.5 && newFieldOfView < 5)
         {
             ProportionalFieldOfView = Mathf.SmoothDamp(ProportionalFieldOfView, newFieldOfView, ref ZoomVelocity, ZoomSmoothTime);
         }

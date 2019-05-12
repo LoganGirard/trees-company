@@ -17,7 +17,8 @@ public class Clicker : MonoBehaviour
     public GameObject CurrentCardSelection;
 
     private GameObject CurrentPrefabSelection;
-    
+
+    Transform PreviousHighlighted;
 
     Camera Camera;
     // Start is called before the first frame update
@@ -31,21 +32,57 @@ public class Clicker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        Ray ray = Camera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
         {
-            PlaceGameObject(CurrentPrefabSelection);
+            if (hit.transform.gameObject.name.Contains("Floor"))
+            {
+                MeshRenderer mr;
+
+                if (PreviousHighlighted != null)
+                {   
+                    mr = PreviousHighlighted.GetComponent<MeshRenderer>();
+                    mr.material.shader = Shader.Find("Unlit/Texture");
+                }
+                PreviousHighlighted = hit.transform;
+                mr = PreviousHighlighted.GetComponent<MeshRenderer>();
+                mr.material.shader = Shader.Find("Outlined/Custom");
+            }
+            SetHighlights(hit.transform, 0);
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                PlaceGameObject(CurrentPrefabSelection, hit);
+            }
         }
 
         SwitchCurrentPrefabSelection();
     }
 
-    void PlaceGameObject(GameObject prefab)
+    void SetHighlights(Transform initialTransform, int level)
     {
-        Ray ray = Camera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        if (level > 10) return;
 
+        MeshRenderer mr = initialTransform.GetComponent<MeshRenderer>();
+
+        if (mr != null)
+        {
+            mr.material.shader = Shader.Find("Outlined/Custom");
+        }
+
+        for (int i = 0;  i < initialTransform.childCount; i++)
+        {
+            level++;
+            SetHighlights(transform.GetChild(i), level);
+        }
+    }
+
+    void PlaceGameObject(GameObject prefab, RaycastHit hit)
+    {
         // Only let the user add stuff on floor tiles
-        if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.name.Contains("Floor"))
+        if (hit.transform.gameObject.name.Contains("Floor"))
         {
             Debug.Log(hit.transform.gameObject.name);
             // the object identified by hit.transform was clicked
