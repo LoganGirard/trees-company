@@ -4,48 +4,49 @@
 public class CameraController : MonoBehaviour
 {
     public float rotationSpeed = 80;
+    public float ZoomScale = 0.1f;
 
     Vector3 RotationPoint;
     public Vector3 PerspectiveOffset;
-
     public float FocusSmoothTime;
-    public float MoveSmoothTime;
     public float ZoomSmoothTime;
-    [Range(0, 5)]
-    public float ProportionalFieldOfView = 1f;
 
-    public float RotationVelocity;
+    [Range(0, 5)]
+    public float ProportionalFieldOfView = 1.0f;
 
     public float lowerAngle = 70;
     public float upperAngle = 330;
 
     // ref variables:
+    float FocusVelocity;
     float ZoomVelocity;
-    Vector3 MoveVelocity;
 
     // Camera view
     Camera Camera;
     Vector3 CameraPosition;
     Quaternion CameraRotation;
-    public Bounds AllBounds;
-    public GameObject[] FocusableGameObjects;
+    Bounds AllBounds;
+    GameObject[] FocusableGameObjects;
+
+    // Mouse stuff
+    Vector3 MouseLastPos;
+    float mouseRotationScale = 0.1f;
 
     private void Start()
     {
         Camera = GetComponent<Camera>();
         GetFocusableGameObjects();
         AllBounds = CalculateBounds(FocusableGameObjects);
+        MouseLastPos = Input.mousePosition;
     }
 
     private void Update()
     {
-        //GetFocusableGameObjects();
-        //AllBounds = CalculateBounds(FocusableGameObjects);
-
         MoveCamera();
 
         GetFocusableGameObjects();
         AllBounds = CalculateBounds(FocusableGameObjects);
+        RefocusCamera();
         ZoomCamera();
     }
 
@@ -70,6 +71,18 @@ public class CameraController : MonoBehaviour
             movement.y--;
         }
 
+        if (Input.GetMouseButton(1))
+        {
+            var mouseDelta = mouseRotationScale * (Input.mousePosition - MouseLastPos);
+            Debug.Log(MouseLastPos + ", " + Input.mousePosition + ", " + mouseDelta);
+
+            movement.x -= mouseDelta.x;
+            movement.y -= mouseDelta.y;
+        }
+
+        // Mouse stuff
+        MouseLastPos = Input.mousePosition;
+
         return movement;
     }
 
@@ -92,9 +105,9 @@ public class CameraController : MonoBehaviour
         Camera.transform.LookAt(AllBounds.center);
     }
 
-    void ZoomCamera()
+    void RefocusCamera()
     {
-        // The zoom-in is to the sphere surrounding the objects' bounds,
+        // The focus-in is to the sphere surrounding the objects' bounds,
         float viewAngle = CalculateFieldOfViewForBounds(AllBounds);
 
         float newFieldOfView;
@@ -102,7 +115,16 @@ public class CameraController : MonoBehaviour
         // Assuming width bigger than height so we don't need to care about viewAngle < 1
         newFieldOfView = viewAngle * ProportionalFieldOfView;
 
-        Camera.fieldOfView = Mathf.SmoothDamp(Camera.fieldOfView, newFieldOfView, ref ZoomVelocity, ZoomSmoothTime);
+        Camera.fieldOfView = Mathf.SmoothDamp(Camera.fieldOfView, newFieldOfView, ref FocusVelocity, FocusSmoothTime);
+    }
+
+    void ZoomCamera()
+    {
+        var newFieldOfView = ProportionalFieldOfView - Input.mouseScrollDelta.y * ZoomScale;
+        if (newFieldOfView > 0.5 && newFieldOfView < 1.5)
+        {
+            ProportionalFieldOfView = Mathf.SmoothDamp(ProportionalFieldOfView, newFieldOfView, ref ZoomVelocity, ZoomSmoothTime);
+        }
     }
 
     float CalculateFieldOfViewForBounds(Bounds bounds)
