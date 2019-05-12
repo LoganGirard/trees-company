@@ -35,6 +35,7 @@ public class Clicker : MonoBehaviour
                 BoardManager.gridGameObjects[y, x] 
                     = Instantiate(powerPrefab, new Vector3(x, y, 0f), Quaternion.identity);
 
+                //BoardManager.gridGameObjects[y, x].transform.SetParent(BoardManager.boardHolder);
             }
         }
     }
