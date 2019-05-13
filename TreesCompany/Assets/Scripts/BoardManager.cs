@@ -51,7 +51,9 @@ public class BoardManager : MonoBehaviour
     public int EnergyValue = 5;
     public int HumanValue = 3;
 
-    public int Population = 0;
+    public int HighScore = 0;
+
+    public int Population = 1;
     public float TickTime = 1.0f;
 
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
@@ -193,6 +195,9 @@ public class BoardManager : MonoBehaviour
     {
         HandleMusicTransitions();
 
+        if (Population > HighScore)
+            HighScore = Population;
+
         bool powerPlantOnBoard = false;
 
         if(Time.time - LastTick >= TickTime)
@@ -292,15 +297,26 @@ public class BoardManager : MonoBehaviour
     {
         if(TotalTreePoints - 50 > TotalEnergyPoints)
         {
-            SoundManager.instance.Transition(SoundManager.instance.hellMusicSource);
+            SoundManager.instance.Transition(SoundManager.instance.happyMusicSource, 3.0f);
+
+             if (!SoundManager.instance.ambientBirdsSource.isPlaying)
+             {
+                 SoundManager.instance.ambientBirdsSource.Play();
+             }
         }
         else if(TotalTreePoints < TotalEnergyPoints)
         {
-            SoundManager.instance.Transition(SoundManager.instance.hellMusicSource);   
+            SoundManager.instance.Transition(SoundManager.instance.hellMusicSource, 3.0f);
+            SoundManager.instance.ambientBirdsSource.Stop();
         }
         else
         {
-            SoundManager.instance.Transition(SoundManager.instance.neutralMusicSource);
+            SoundManager.instance.Transition(SoundManager.instance.neutralMusicSource, 3.0f);
+
+            if (!SoundManager.instance.ambientBirdsSource.isPlaying)
+            {
+                SoundManager.instance.ambientBirdsSource.Play();
+            }
         }
     }
 
