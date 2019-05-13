@@ -9,7 +9,7 @@ public class StateCalculator : MonoBehaviour
     public  GameObject floorPrefab;
     public GameObject powerPrefab;
 
-     void GetNeighbors(GameObject[,] grid, int x, int y, out int treeCount, out int houseCount, out int powerHouseCount)
+    public void GetNeighbors(GameObject[,] grid, int x, int y, out int treeCount, out int houseCount, out int powerHouseCount)
     {
         treeCount = 0;
         houseCount = 0;
@@ -41,7 +41,7 @@ public class StateCalculator : MonoBehaviour
         }
     }
 
-     public GameObject[,] CalculateNextState(GameObject[,] originalGrid)
+    public GameObject[,] CalculateNextState(GameObject[,] originalGrid)
     {
         Debug.Log("Stating, baby!");
         var nextState = new GameObject[originalGrid.GetLength(0), originalGrid.GetLength(1)];
@@ -60,13 +60,14 @@ public class StateCalculator : MonoBehaviour
                 {
                     // Generate new stuff.
                     
-                    if (treeCount - houseCount*1.5 >= 0 && treeCount >=2)
-                    {
-                        nextState[y, x] = Instantiate(housePrefab, new Vector3(x, y, 0f), Quaternion.identity);
-                    }
-                    else if (treeCount >= 2 || UnityEngine.Random.Range(0f, 1f) > 0.95f)
-                    {
-                            nextState[y, x] = Instantiate(treePrefab, new Vector3(x, y, 0f), Quaternion.identity);
+                    //if (treeCount - houseCount*1.5 >= 0 && treeCount >=2)
+                    //{
+                    //    nextState[y, x] = Instantiate(housePrefab, new Vector3(x, y, 0f), Quaternion.identity);
+                    //}
+                    //else
+                    if (treeCount >= 2 || UnityEngine.Random.Range(0f, 1f) > 0.95f)
+                    { 
+                        nextState[y, x] = Instantiate(treePrefab, new Vector3(x, y, 0f), Quaternion.identity);
                     }
                     else
                     {
@@ -76,7 +77,7 @@ public class StateCalculator : MonoBehaviour
                 //// Potentially kill things.
                 else if (IsTree(cur))
                 {
-                    if (houseCount >= 3 || treeCount >= 5)
+                    if (houseCount >= 3 || treeCount >= 7 || powerHousecount >= 1)
                     {
                         nextState[y, x] = Instantiate(floorPrefab, new Vector3(x, y, 0f), Quaternion.identity);
                     }
@@ -87,7 +88,8 @@ public class StateCalculator : MonoBehaviour
                 }
                 else if (IsHouse(cur))
                 {
-                    if(treeCount - houseCount*1.5 <= 0)
+                    // Houses die when
+                    if (treeCount == 0)
                     {
                         nextState[y, x] = Instantiate(floorPrefab, new Vector3(x, y, 0f), Quaternion.identity);
                     }

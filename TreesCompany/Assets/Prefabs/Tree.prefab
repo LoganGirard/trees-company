@@ -1,17 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &5744499847112564917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8448635179871921040}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a6f6f16b9ebc1747bb98aaf0206b651, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5268358460044108589
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,7 +193,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8014388721169596315}
   - component: {fileID: 3773438763068963267}
-  - component: {fileID: 5541460678519378697}
+  - component: {fileID: 8115710735048317782}
   m_Layer: 0
   m_Name: Tree
   m_TagString: TileObjects
@@ -244,7 +232,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 16
   m_CollisionDetection: 0
---- !u!114 &5541460678519378697
+--- !u!114 &8115710735048317782
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -253,7 +241,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6061244691346348346}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a6f6f16b9ebc1747bb98aaf0206b651, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a0a3b8c912874acdbbf80432c067daf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6446262700259477817
@@ -439,6 +427,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5744499847112564917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8448635179871921040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a6f6f16b9ebc1747bb98aaf0206b651, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1230724118189200472
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -14,7 +14,7 @@ public class BoardManager : MonoBehaviour
         public int maximum;             //Maximum value for our Count class.
 
 
-        //Assignment constructor.
+        //Assignment constructor
         public Count(int min, int max)
         {
             minimum = min;
@@ -42,14 +42,20 @@ public class BoardManager : MonoBehaviour
     public GameObject FloatingTextPrefab;
 
     // TotalPoints
-    public int TotalTreePoints = 0;
-    public int TotalEnergyPoints = 0;
-    public int TotalMaxPopulation = 0;
+    public static int TotalTreePoints = 5;
+    public static int TotalEnergyPoints = 15;
+    public static int TotalMaxPopulation = 0;
+    public static int HighestTotalPopulation = 0;
 
-    // Added Points
-    public int TreeValue = 1;
-    public int EnergyValue = 5;
-    public int HumanValue = 3;
+
+    public int HumansPerHouse = 5;
+    public int EnergyByPowerPlant = 3;
+    public int TreePointsByPowerPlant = -2;
+
+    //// Added Points
+    //public int TreeValue = 1;
+    //public int EnergyValue = 5;
+    //public int HumanValue = 3;
 
     public int Population = 0;
     public float TickTime = 5.0f;
@@ -175,13 +181,6 @@ public class BoardManager : MonoBehaviour
         LayoutObjectAtRandom(HouseTiles, HouseCount.minimum, HouseCount.maximum);
     }
 
-    // Start is called before the first frame update
-    void blah()
-    {
-        SetupScene();
-        gameObject.GetComponent<StateCalculator>().CalculateNextState(gridGameObjects);
-    }
-
     // Update is called once per frame
     void Start()
     {
@@ -214,27 +213,44 @@ public class BoardManager : MonoBehaviour
             {
                 for (int y = 0; y < gridGameObjects.GetLength(0); y++)
                 {
+                    transform.GetComponent<StateCalculator>().GetNeighbors(gridGameObjects, x, y, out int treeCount, out int houseCount, out int powerHousecount);
+
                     GameObject currentGO = gridGameObjects[y, x];
                     currentGO.transform.SetParent(boardHolder);
 
                     if (currentGO.name.Contains("Tree"))
                     {
-                        TotalTreePoints += TreeValue;
+                        if (houseCount >= 1)
+                        {
+                            TotalTreePoints += houseCount;
+                            ShowFloatingText(currentGO.transform, houseCount, "Tree");
+                        }
+
                         currentGO.transform.Rotate(new Vector3(-90, 0));
-                        ShowFloatingText(currentGO.transform, TreeValue, "Tree");
                     }
                     else if (currentGO.name.Contains("House"))
                     {
-                        TotalMaxPopulation++;
-                        Population++;
+                        TotalMaxPopulation += HumansPerHouse;
+
+                        if (powerHousecount > 0)
+                        {
+                            Population = Population + powerHousecount > TotalMaxPopulation ? TotalMaxPopulation : Population + powerHousecount;
+                        }
+
                         currentGO.transform.Rotate(new Vector3(90, -90, 90));
-                        ShowFloatingText(currentGO.transform, HumanValue, "Human");
+                        ShowFloatingText(currentGO.transform, powerHousecount, "Human");
                     }
                     else if (currentGO.name.Contains("Power"))
                     {
-                        TotalEnergyPoints += EnergyValue;
+                        if (TotalTreePoints + TreePointsByPowerPlant >= 0)
+                        {
+                            TotalEnergyPoints += EnergyByPowerPlant;
+                            TotalTreePoints += TreePointsByPowerPlant;
+                            ShowFloatingText(currentGO.transform, EnergyByPowerPlant, "Energy");
+                            ShowFloatingText(currentGO.transform, TreePointsByPowerPlant, "Tree");
+                        }
+
                         currentGO.transform.Rotate(new Vector3(-90, 0, 0));
-                        ShowFloatingText(currentGO.transform, EnergyValue, "Energy");
                     }
                 }
             }
@@ -249,6 +265,9 @@ public class BoardManager : MonoBehaviour
 
                     switch (canvasChild.name)
                     {
+                        case "ScoreIcon":
+                            leText.text = $"Score: {HighestTotalPopulation}";
+                            break;
                         case "HumanIcon":
                             leText.text = $"{Population}/{TotalMaxPopulation}";
                             break;
@@ -264,10 +283,15 @@ public class BoardManager : MonoBehaviour
                 }
             }
 
-
             Debug.Log($"Tree Points:{TotalTreePoints}, Energy Points: {TotalEnergyPoints}");
 
             transform.Rotate(new Vector3(90, 0, 0));
+
+            Population = Math.Min(Population, TotalEnergyPoints);
+
+            //TotalEnergyPoints -= Population;
+
+            HighestTotalPopulation = Population > HighestTotalPopulation ? Population : HighestTotalPopulation;
         }
     }
 
@@ -279,14 +303,28 @@ public class BoardManager : MonoBehaviour
             go.transform.Rotate(new Vector3(-90, 0, 0));
 
             TextMesh textMesh = go.GetComponent<TextMesh>();
-            textMesh.text = "+" + value.ToString();
+            if (value > 0)
+            {
+                textMesh.text = "+" + value.ToString();
+            }
+            else if (value < 0)
+            {
+                textMesh.text = value.ToString();
+            }
 
             // '7C942C' - green (124, 148, 44)
             // 'FFCA6F' - electric (255, 202, 111)
             // Definitely would pass a Code Review
             if (type.Equals("Tree"))
             {
-                textMesh.color = Color.green; // new Color(124/255.0f, 148/255.0f, 44/255.0f);
+                if (value > 0)
+                {
+                    textMesh.color = Color.green; // new Color(124/255.0f, 148/255.0f, 44/255.0f);
+                }
+                else
+                {
+                    textMesh.color = Color.red;
+                }
             }
             else if (type.Equals("Energy"))
             {
