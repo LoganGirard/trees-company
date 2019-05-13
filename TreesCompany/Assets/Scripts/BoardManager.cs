@@ -56,9 +56,10 @@ public class BoardManager : MonoBehaviour
     //public int TreeValue = 1;
     //public int EnergyValue = 5;
     //public int HumanValue = 3;
+    public int HighScore = 0;
 
-    public int Population = 0;
-    public float TickTime = 5.0f;
+    public int Population = 1;
+    public float TickTime = 3.0f;
     
     private Transform boardHolder;                               //A variable to store a reference to the transform of our Board object.
     private List<Vector3> gridPositions = new List<Vector3>();   //A list of possible locations to place tiles.
@@ -190,7 +191,14 @@ public class BoardManager : MonoBehaviour
 
     void Update()
     {
-        if(Time.time - LastTick >= TickTime)
+        HandleMusicTransitions();
+
+        if (Population > HighScore)
+            HighScore = Population;
+
+        bool powerPlantOnBoard = false;
+
+        if (Time.time - LastTick >= TickTime)
         {
             LastTick = Time.time;
             TotalMaxPopulation = 0;
@@ -248,11 +256,24 @@ public class BoardManager : MonoBehaviour
                             TotalTreePoints += TreePointsByPowerPlant;
                             ShowFloatingText(currentGO.transform, EnergyByPowerPlant, "Energy");
                             ShowFloatingText(currentGO.transform, TreePointsByPowerPlant, "Tree");
+                            powerPlantOnBoard = true;
                         }
 
                         currentGO.transform.Rotate(new Vector3(-90, 0, 0));
                     }
                 }
+            }
+
+            if (powerPlantOnBoard)
+            {
+                if (!SoundManager.instance.ambientFactorySource.isPlaying)
+                {
+                    SoundManager.instance.PlayFactoryLoop();
+                }
+            }
+            else
+            {
+                SoundManager.instance.InterruptFactoryLoop();
             }
 
             Canvas leCanvas = FindObjectOfType<Canvas>();
@@ -292,6 +313,33 @@ public class BoardManager : MonoBehaviour
             //TotalEnergyPoints -= Population;
 
             HighestTotalPopulation = Population > HighestTotalPopulation ? Population : HighestTotalPopulation;
+        }
+    }
+
+    void HandleMusicTransitions()
+    {
+        if(TotalTreePoints - 50 > TotalEnergyPoints)
+        {
+            SoundManager.instance.Transition(SoundManager.instance.happyMusicSource, 3.0f);
+
+             if (!SoundManager.instance.ambientBirdsSource.isPlaying)
+             {
+                 SoundManager.instance.ambientBirdsSource.Play();
+             }
+        }
+        else if(TotalTreePoints < TotalEnergyPoints)
+        {
+            SoundManager.instance.Transition(SoundManager.instance.hellMusicSource, 3.0f);
+            SoundManager.instance.ambientBirdsSource.Stop();
+        }
+        else
+        {
+            SoundManager.instance.Transition(SoundManager.instance.neutralMusicSource, 3.0f);
+
+            if (!SoundManager.instance.ambientBirdsSource.isPlaying)
+            {
+                SoundManager.instance.ambientBirdsSource.Play();
+            }
         }
     }
 

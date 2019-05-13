@@ -9,6 +9,7 @@ public class SoundManager : MonoBehaviour
     public AudioSource happyMusicSource;                 //Drag a reference to the audio source which will play the music.
     public AudioSource hellMusicSource;
     public AudioSource neutralMusicSource;
+    public AudioSource gameOverMusicSource;
 
 
     public AudioSource ambientBirdsSource;
@@ -99,25 +100,30 @@ public class SoundManager : MonoBehaviour
         efxSource.Play();
     }
 
-    public void Transition(AudioSource nextAudio)
+    public void Transition(AudioSource nextAudio, float fadeTime=0)
     {
         if (nextAudio.isPlaying)
             return;
 
-        StartCoroutine(FadeOut(CurrentMusicSource));
+        if (fadeTime != 0)
+            fadeTime = FadeTime;
+        else
+            fadeTime = 0.5f;
+
+        StartCoroutine(FadeOut(CurrentMusicSource, fadeTime));
 
         CurrentMusicSource = nextAudio;
 
-        StartCoroutine(FadeIn(nextAudio));
+        StartCoroutine(FadeIn(nextAudio, fadeTime));
     }
 
-    private IEnumerator FadeOut(AudioSource audioSource)
+    private IEnumerator FadeOut(AudioSource audioSource, float fadeTime)
     {
         float startVolume = audioSource.volume;
 
         while (audioSource.volume > 0)
         {
-            audioSource.volume -= startVolume * Time.deltaTime / FadeTime;
+            audioSource.volume -= startVolume * Time.deltaTime / fadeTime;
 
             yield return null;
         }
@@ -126,9 +132,12 @@ public class SoundManager : MonoBehaviour
         audioSource.volume = startVolume;
     }
 
-    private IEnumerator FadeIn(AudioSource audioSource)
+    private IEnumerator FadeIn(AudioSource audioSource, float fadeTime)
     {
         float finalVolume = 1;
+
+        if (audioSource.name.Equals("Hell"))
+            finalVolume = 0.6f;
 
         if(!audioSource.isPlaying)
         {
@@ -136,9 +145,9 @@ public class SoundManager : MonoBehaviour
             audioSource.Play();
         }
 
-        while (audioSource.volume < 1)
+        while (audioSource.volume < finalVolume)
         {
-            audioSource.volume += finalVolume * Time.deltaTime / FadeTime;
+            audioSource.volume += finalVolume * Time.deltaTime / fadeTime;
 
             yield return null;
         }
