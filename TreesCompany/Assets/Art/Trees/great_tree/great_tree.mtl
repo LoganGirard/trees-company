@@ -1,0 +1,47 @@
+# Blender MTL File: 'great_tree.blend'
+# Material Count: 5
+
+newmtl None
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd D:\Projects\GamesForOurFuture\Treescompany\trees-company\TreesCompany\Assets\Art\Tile\tile_grass_B.png
+
+newmtl None_greattree_bot_A.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd greattree_bot_A.png
+
+newmtl None_greattree_mid_A.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd greattree_mid_A.png
+
+newmtl None_greattree_top_A.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd greattree_top_A.png
+
+newmtl None_mid_bush_A.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd D:\Projects\GamesForOurFuture\Treescompany\trees-company\TreesCompany\Assets\Art\Trees\mid_bush_A.png
